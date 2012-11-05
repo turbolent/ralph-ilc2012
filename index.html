@@ -1,0 +1,750 @@
+<!DOCTYPE HTML>
+<html lang="en-US">
+  <head>
+	<title>Ralph</title>
+	<meta charset="UTF-8"/>
+	<meta name="viewport" content="width=1274, user-scalable=no" />
+	<link rel="stylesheet" href="style/style.css" />
+  </head>
+  <body class="list">
+	<div class="slide cover" id="cover"><div>
+		<section>
+		  <header>
+			<h2>Ralph &ndash; A Dylan dialect that compiles to JavaScript</h2>
+		  </header>
+          <div class="info">
+            <ul>
+              <li>International Lisp Conference</li>
+              <li>23rd October 2012</li>
+            </ul>
+            <ul>
+              <li>Bastian Müller</li>
+              <li>ITU Copenhagen</li>
+              <li>@turbolent</li>
+            </ul>
+          </div>
+        </section>
+	</div></div>
+	<div class="slide" id="outline"><div>
+        <section>
+		  <header>
+			<h2>Outline</h2>
+		  </header>
+		  <ul>
+			<li>Introduction
+              <ul>
+                <li>Motivation</li>
+                <li>Problems</li>
+              </ul>
+            </li>
+            <li>Solution
+              <ul>
+                <li>Language</li>
+                <li>Implementation</li>
+              </ul>
+            </li>
+            <li>Conclusion</li>
+          </ul>
+        </section>
+      </div>
+    </div>
+
+    <div class="slide cover middle" id="introduction"><div>
+        <section>
+		  <header>
+			<h2>Introduction</h2>
+		  </header>
+        </section>
+    </div></div>
+
+	<div class="slide" id="motivation"><div>
+		<section>
+		  <header>
+			<h2>Motivation</h2>
+		  </header>
+		  <ul>
+			<li>Application development</li>
+            <li>Web technologies</li>
+            <li>JavaScript only</li>
+		  </ul>
+		</section>
+	</div></div>
+
+	<div class="slide" id="why-js"><div>
+		<section>
+			<header>
+				<h2>Why JavaScript?</h2>
+			</header>
+            <div class="two">
+			  <ul>
+			    <li>Reach
+                  <ul>
+                    <li>Desktop</li>
+                    <li>Mobile</li>
+                    <li>Server</li>
+                  </ul>
+                </li>
+              </ul>
+              <ul>
+                <li>Features
+                  <ul>
+                    <li>Dynamic</li>
+                    <li>Functional</li>
+                    <li>Object system</li>
+                  </ul>
+                </li>
+			  </ul>
+            </div>
+		</section>
+	</div></div>
+
+	<div class="slide" id="why-not-js"><div>
+		<section>
+		  <header>
+			<h2>Why not?</h2>
+          </header>
+          <ul>
+            <li>Difficult to develop large applications</li>
+          </ul>
+          <div class="two">
+            <ul>
+              <li>Limited
+                <ul>
+                  <li>Collections</li>
+                  <li>Conditions</li>
+                  <li>Modules</li>
+                  <li>Macros</li>
+                </ul>
+              </li>
+            </ul>
+            <ul>
+              <li>Bad features
+                <ul>
+                  <li>Hoisting</li>
+                  <li>Semantics</li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+        </section>
+    </div></div>
+
+	<div class="slide" id="hoisting"><div>
+		<section>
+		  <header>
+			<h2>Hoisting</h2>
+          </header>
+	      <pre>
+            <code>function foo () {</code>
+            <code>  bar();</code>
+            <code>  var x = 1;</code>
+            <code>}</code>
+          </pre>
+        </section>
+    </div></div>
+
+	<div class="slide" id="hoisting2"><div>
+		<section>
+		  <header>
+			<h2>Hoisting</h2>
+          </header>
+          <pre>
+            <code><mark>var foo;</mark></code>
+            <code><mark>foo = </mark>function () {</code>
+            <code>  <mark>var x;</mark></code>
+            <code>  bar();</code>
+            <code>  <mark>x = </mark>1;</code>
+            <code>}</code>
+          </pre>
+        </section>
+    </div></div>
+
+    <div class="slide" id="hoisting-example"><div>
+		<section>
+		  <header>
+			<h2>Hoisting &ndash; Example</h2>
+          </header>
+          <pre>
+            <code>var foo = 1;</code>
+            <code>function bar () {</code>
+            <code>  if (!foo)</code>
+            <code>    var foo = 10;</code>
+            <code>  return foo;</code>
+            <code>}</code>
+            <code>bar();</code>
+          </pre>
+        </section>
+    </div></div>
+
+    <div class="slide" id="hoisting-example2"><div>
+		<section>
+		  <header>
+			<h2>Hoisting &ndash; Example</h2>
+          </header>
+          <pre>
+            <code>var foo = 1;</code>
+            <code>function bar () {</code>
+            <code>  <mark>var foo; // = undefined</mark></code>
+            <code>  if (!foo)</code>
+            <code>    foo = 10;</code>
+            <code>  return foo;</code>
+            <code>}</code>
+            <code>bar(); // <mark>⇒ 10</mark> </code>
+          </pre>
+        </section>
+    </div></div>
+
+	<div class="slide" id="intro-solutions"><div>
+		<section>
+		  <header>
+			<h2>Solution</h2>
+          </header>
+          <ul>
+            <li>Compilers</li>
+            <li>Examples
+              <ul>
+                <li>CoffeeScript</li>
+                <li>Dart (Google)</li>
+                <li>TypeScript (Microsoft)</li>
+              </ul>
+            </li>
+          </ul>
+        </section>
+    </div></div>
+
+	<div class="slide" id="intro-lisp"><div>
+		<section>
+		  <header>
+			<h2>Lisp</h2>
+          </header>
+          <ul>
+            <li>Parenscript (CL)</li>
+            <li>ClojureScript (Clojure)</li>
+            <li>Scheme2JS (Scheme)</li>
+            <li>Gambit-JS (R5RS)</li>
+          </ul>
+        </section>
+    </div></div>
+
+    <div class="slide" id="intro-lisp-categories"><div>
+		<section>
+		  <header>
+			<h2>Lisp &ndash; Categories</h2>
+          </header>
+          <ul>
+            <li>Features</li>
+            <li>Implementation complexity</li>
+            <li>Compilation approach</li>
+          </ul>
+        </section>
+    </div></div>
+
+    <div class="slide" id="intro-lisp-problems"><div>
+		<section>
+		  <header>
+			<h2>Lisp &ndash; Problems</h2>
+          </header>
+          <ul>
+            <li>Performance
+              <ul>
+                <li>Missing optimizations</li>
+                <li>Unnecessary closures</li>
+              </ul>
+            </li>
+            <li>Interoperability</li>
+          </ul>
+        </section>
+    </div></div>
+
+    <div class="slide" id="unnecessary-closures"><div>
+		<section>
+		  <header>
+			<h2>Unnecessary closures</h2>
+          </header>
+          <p>ClojureScript</p>
+          <pre>
+            <code>(let [x (try ... (catch ...))]</code>
+            <code>  ...)</code>
+          </pre>
+
+          <pre>
+            <code>var x = <mark>(function(){</mark></code>
+            <code>           try { ... }</code>
+            <code>           catch (...) { ... }</code>
+            <code>         <mark>})();</mark></code>
+          </pre>
+        </section>
+    </div></div>
+
+
+   <div class="slide" id="unnecessary-closures2"><div>
+		<section>
+		  <header>
+			<h2>Unnecessary closures</h2>
+          </header>
+          <p>Parenscript</p>
+          <pre>
+            <code>(setf x (let ((x 1))</code>
+            <code>          x))</code>
+          </pre>
+          <pre>
+            <code>x = <mark>(function () {</mark></code>
+            <code>       var x = 1;</code>
+            <code>       return x;</code>
+            <code>     <mark>})();</mark></code>
+          </pre>
+        </section>
+    </div></div>
+
+    <div class="slide cover middle" id="solution"><div>
+        <section>
+		  <header>
+			<h2>Solution</h2>
+		  </header>
+        </section>
+    </div></div>
+
+    <div class="slide" id="ralph"><div>
+		<section>
+		  <header>
+			<h2>Ralph</h2>
+          </header>
+          <ul>
+            <li>Goals
+              <ul>
+                <li>Performance</li>
+                <li>Features</li>
+                <li>Expressiveness</li>
+              </ul>
+            </li>
+            <li>Inspired by Dylan</li>
+          </ul>
+        </section>
+    </div></div>
+
+    <div class="slide" id="dylan"><div>
+		<section>
+		  <header>
+			<h2>Dylan</h2>
+          </header>
+          <ul>
+            <li>Invented by Apple</li>
+            <li>Based on Scheme, Common Lisp</li>
+            <li>Single namespace, CLOS</li>
+            <li>ALGOL-like syntax</li>
+            <li>Hygienic rule-based macro system</li>
+          </ul>
+        </section>
+    </div></div>
+
+    <div class="slide" id="dylan-books"><div>
+		<section>
+          <header></header>
+          <div class="two">
+            <img src="images/drm-cover.jpg" style="margin-right: 10%"/>
+            <img src="images/dylan-cover.jpg"/>
+          </div>
+        </section>
+    </div></div>
+
+    <div class="slide" id="features"><div>
+		<section>
+		  <header>
+			<h2>Features</h2>
+          </header>
+          <ul>
+            <li>S-expression syntax</li>
+            <li>Dylan special forms, standard functions</li>
+            <li>Hygienic procedural macro system</li>
+            <li>Module system</li>
+          </ul>
+        </section>
+    </div></div>
+
+    <div class="slide" id="features2"><div>
+		<section>
+		  <header>
+			<h2>Features</h2>
+          </header>
+          <ul>
+            <li>Simplified
+              <ul>
+                <li>Collections</li>
+                <li>Condition system</li>
+                <li>Numerical tower</li>
+              </ul>
+            </li>
+            <li>Single inheritance and single dispatch</li>
+          </ul>
+        </section>
+    </div></div>
+
+    <div class="slide" id="interoperability"><div>
+	    <section>
+		  <header>
+		    <h2>Interoperability</h2>
+          </header>
+          <ul>
+            <li>Usage of native types
+              <ul>
+                <li><code class="inline">&lt;object&gt; ⇒ Object</code></li>
+                <li><code class="inline">&lt;array&gt; ⇒ Array</code></li>
+              </ul>
+            </li>
+            <li>Native calling convention
+              <ul>
+                <li>Rest argument</li>
+                <li>Keyword arguments</li>
+              </ul>
+            </li>
+          </ul>
+        </section>
+    </div></div>
+
+    <div class="slide" id="module-system"><div>
+		<section>
+		  <header>
+			<h2>Module system</h2>
+          </header>
+          <ul>
+            <li>Only modules</li>
+            <li>Import/export definitions</li>
+            <li>Namespace</li>
+          </ul>
+        </section>
+    </div></div>
+
+    <div class="slide" id="object-system"><div>
+		<section>
+		  <header>
+			<h2>Object system</h2>
+          </header>
+          <ul>
+            <li>Single inheritance and single dispatch</li>
+            <li>Based on prototypes</li>
+            <li>Normal constructors</li>
+            <li>Methods added to prototype</li>
+          </ul>
+        </section>
+    </div></div>
+
+    <div class="slide" id="object-system-example"><div>
+	    <section>
+		  <header>
+			<h2>Object system &ndash; Example</h2>
+          </header>
+          <pre>
+            <code>(define-class &lt;person> (&lt;object&gt;)</code>
+            <code>  (name ""))</code>
+            <code> </code>
+            <code>(define-method hello ((person &lt;person&gt;))</code>
+            <code>  (format-to-string "Hello, %s!"</code>
+            <code>                    (get person "name")))</code>
+          </pre>
+        </section>
+    </div></div>
+
+    <div class="slide" id="object-system-example2"><div>
+	    <section>
+		  <header>
+			<h2>Object system &ndash; Example</h2>
+          </header>
+          <pre>
+            <code>(define-class &lt;student&gt; (&lt;person&gt;)</code>
+            <code>  id)</code>
+            <code> </code>
+            <code>(define-method hello ((student &lt;student&gt;))</code>
+            <code>  (concatenate (call-next-method)</code>
+            <code>    (format-to-string " Student #%d!"</code>
+            <code>                      (get student "id"))))</code>
+          </pre>
+        </section>
+    </div></div>
+
+    <div class="slide" id="object-system-example3"><div>
+	    <section>
+		  <header>
+			<h2>Object system &ndash; Example</h2>
+          </header>
+          <pre>
+            <code>(bind ((john (make &lt;student&gt;</code>
+            <code>                   name: "John" id: 23)))</code>
+            <code>  (hello john))</code>
+            <code> </code>
+            <code>;; ⇒ "Hello, John! Student #23"</code>
+          </pre>
+        </section>
+    </div></div>
+
+    <div class="slide" id="object-system-diagram"><div>
+		<section>
+		  <header>
+			<h2>Object system &ndash; Example</h2>
+          </header>
+          <img src="images/diagram.svg" style="height: 70%; margin-left: 140px"/>
+        </section>
+    </div></div>
+
+    <div class="slide" id="macro-system"><div>
+	    <section>
+		  <header>
+			<h2>Macro system</h2>
+          </header>
+          <ul>
+            <li>Procedural, hygienic</li>
+            <li>Inspired by Clojure</li>
+            <li>Quasi-quotation</li>
+            <li>Syntax-quoting</li>
+          </ul>
+        </section>
+    </div></div>
+
+    <div class="slide" id="syntax-quoting"><div>
+	    <section>
+		  <header>
+			<h2>Syntax-quoting</h2>
+          </header>
+          <pre style="margin-top: 100px">
+            <code>(bind ((x 23))</code>
+            <code>  `(y x ,x ,'x))</code>
+          </pre>
+          <pre style="margin-top: 80px">
+            <code>(foo::y bar::x 23 x)</code>
+          </pre>
+        </section>
+    </div></div>
+
+    <div class="slide" id="hygiene"><div>
+	    <section>
+		  <header>
+			<h2>Hygiene</h2>
+          </header>
+          <ul>
+            <li>Prevent binding of external identifiers</li>
+          </ul>
+          <pre>
+            <code>`(bind ((x ...)) ...</code>
+          </pre>
+        </section>
+    </div></div>
+
+
+    <div class="slide" id="macro-example"><div>
+	    <section>
+		  <header>
+			<h2>Macros &ndash; Example</h2>
+          </header>
+          <pre>
+            <code>(define-macro inc! (place value)</code>
+            <code>  `(set! ,place</code>
+            <code>         (<mark>+</mark> ,place ,(or value 1))))</code>
+          </pre>
+          <pre>
+            <code>(bind ((x 1)</code>
+            <code>       <mark>(+ -)</mark>)</code>
+            <code>  (inc! x)</code>
+            <code>  x)</code>
+            <code>;; ⇒ 2
+          </pre>
+        </section>
+    </div></div>
+
+    <div class="slide" id="scoping"><div>
+	    <section>
+		  <header>
+			<h2>Scoping</h2>
+          </header>
+          <ul>
+            <li>No closures necessary</li>
+            <li>Alpha-conversion</li>
+          </ul>
+          <pre><code>(bind ((x (bind ((x 1)) x))) x)</code></pre>
+          <pre><code>(%bind (x1 (%bind (x2 1) x2)) x1)</code></pre>
+        </section>
+    </div></div>
+
+    <div class="slide" id="code-generation"><div>
+	    <section>
+		  <header>
+			<h2>Code generation</h2>
+          </header>
+          <ul>
+            <li>Direct-style</li>
+            <li>Everything as statement</li>
+            <li>Administrative normal form</li>
+          </ul>
+        </section>
+    </div></div>
+
+    <div class="slide" id="anf"><div>
+	    <section>
+		  <header>
+			<h2>Administrative normal form</h2>
+          </header>
+          <ul>
+            <li>Arguments of a function call are trivial</li>
+            <li>Trivial: constant, variable or function</li>
+            <li>Non-trivial computations as bindings</li>
+          </ul>
+        </section>
+    </div></div>
+
+    <div class="slide" id="anf-example"><div>
+	    <section>
+		  <header>
+			<h2>ANF &ndash; Example</h2>
+          </header>
+          <pre>
+            <code>(bind ((x (+ (bind ((y 1))</code>
+            <code>               (+ y 2))</code>
+            <code>             3)))</code>
+            <code>  (+ (- x 4) x))</code>
+          </pre>
+          <pre>
+            <code>(%bind (y 1)</code>
+            <code>  (%bind (g1 (+ y 2))</code>
+            <code>    (%bind (x (+ g1 3))</code>
+            <code>      (%bind (g2 (- x 4))</code>
+            <code>        (+ g2 x)))))</code>
+          </pre>
+        </section>
+    </div></div>
+
+    <div class="slide" id="adjusted-anf"><div>
+	    <section>
+		  <header>
+			<h2>Adjusted ANF</h2>
+          </header>
+          <ul>
+            <li>Change definition of triviality</li>
+            <li>Allow forms not producing statements</li>
+          </ul>
+          <pre>
+            <code>(%bind (y 1)</code>
+            <code>  (%bind (g1 (+ y 2))</code>
+            <code>    (%bind (x (+ g1 3))</code>
+            <code>      (+ <mark>(- x 4)</mark> x))))</code>
+          </pre>
+        </section>
+    </div></div>
+
+    <div class="slide" id="statement-form"><div>
+	    <section>
+		  <header>
+			<h2>Statement form</h2>
+          </header>
+          <ul>
+            <li>Move binding values gen. statements to body</li>
+            <li>Add assignments</li>
+            <li>Add explicit return statements</li>
+            <li>Flatten statements</li>
+          </ul>
+        </section>
+    </div></div>
+
+    <div class="slide" id="statement-form-example"><div>
+	    <section>
+		  <header>
+			<h2>Statement form &ndash; Example</h2>
+          </header>
+          <pre>
+            <code>(%bind (x1 (%if ...</code>
+            <code>                (%bind (x2 ...)</code>
+            <code>                  ... (foo x2))</code>
+            <code>                3))</code>
+          </pre>
+          <pre>
+            <code>(%begin <mark>(%var (x1 #f))</mark></code>
+            <code>        (%if ...</code>
+            <code>             (%begin (<mark>%var</mark> (x2 ...)) ...</code>
+            <code>                     (<mark>%set x1</mark> (foo x2)))</code>
+            <code>             (<mark>%set x1</mark> 3))</code>
+          </pre>
+        </section>
+    </div></div>
+
+    <div class="slide" id="statement-form-example2"><div>
+	    <section>
+		  <header>
+			<h2>Statement form &ndash; Example</h2>
+          </header>
+          <pre>
+            <code>var x1;</code>
+            <code>if (...) {</code>
+            <code>  var x2 = ...;</code>
+            <code>  ...</code>
+            <code>  x1 = foo(x2);</code>
+            <code>} else</code>
+            <code>  x1 = 3;</code>
+          </pre>
+        </section>
+    </div></div>
+
+    <div class="slide" id="optimizations"><div>
+	    <section>
+		  <header>
+			<h2>Optimizations</h2>
+          </header>
+          <ul>
+            <li>Performance over size</li>
+            <li>Inlining</li>
+            <li>Tail-call optimization</li>
+            <li>Reduce property access</li>
+          </ul>
+        </section>
+    </div></div>
+
+    <div class="slide cover middle" id="conclusion"><div>
+        <section>
+		  <header>
+			<h2>Conclusion</h2>
+		  </header>
+        </section>
+    </div></div>
+
+    <div class="slide" id="future-work"><div>
+        <section>
+		  <header>
+			<h2>Future work</h2>
+          </header>
+          <ul>
+            <li>More optimizations</li>
+            <li>Type checking/inference</li>
+            <li>Multiple dispatch</li>
+          </ul>
+        </section>
+    </div></div>
+
+    <div class="slide" id="code"><div>
+        <section>
+		  <header>
+			<h2>Code</h2>
+          </header>
+          <ul>
+            <li>Github: <a href="http://github.com/turbolent/ralph">turbolent/ralph</a></li>
+            <li>Projects
+              <ul>
+                <li>Client-side HTML5 UI library
+                <li>Server-side web framework
+              </ul>
+            </li>
+            <li>Dylan: <a href="http://opendylan.org/">opendylan.org</a></li>
+          </ul>
+        </section>
+    </div></div>
+
+    <div class="slide cover middle" id="end"><div>
+        <section>
+		  <header style="margin-top:-50px">
+			<h2>Thanks!<br/>Questions?</h2>
+		  </header>
+        </section>
+    </div></div>
+
+    <div class="progress">
+      <div id="progress"></div>
+    </div>
+<!--    <script>window.showerNotes = 'notes.html'</script> -->
+	<script src="script.js"></script>
+  </body>
+</html>

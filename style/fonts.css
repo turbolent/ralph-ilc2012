@@ -1,0 +1,59 @@
+@font-face {
+  font-family: 'Source Sans Pro';
+  font-style: normal;
+  font-weight: 700;
+  src: url('../fonts/SourceSansPro-Bold.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Source Sans Pro';
+  font-style: normal;
+  font-weight: 400;
+  src: url('../fonts/SourceSansPro-Regular.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Source Sans Pro';
+  font-style: italic;
+  font-weight: 700;
+  src: url('../fonts/SourceSansPro-BoldIt.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Source Sans Pro';
+  font-style: italic;
+  font-weight: 600;
+  src: url('../fonts/SourceSansPro-SemiboldIt.ttf') format('truetype')
+}
+@font-face {
+  font-family: 'Source Sans Pro';
+  font-style: italic;
+  font-weight: 400;
+  src: url('../fonts/SourceSansPro-It.ttf') format('truetype')
+}
+@font-face {
+  font-family: 'Source Sans Pro';
+  font-style: normal;
+  font-weight: 600;
+  src: url('../fonts/SourceSansPro-Semibold.ttf') format('truetype');
+}
+@font-face {
+    font-family: 'Museo Slab';
+    src: url('../fonts/MuseoSlab-500.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+/*
+@font-face {
+    font-family: 'Adelle';
+    src: url('../fonts/adelle_bold-webfont.woff') format('woff'),
+         url('../fonts/adelle_bold-webfont.ttf') format('truetype'),
+         url('../fonts/adelle_bold-webfont.svg#AdelleBold') format('svg');
+    font-weight: bold;
+    font-style: normal;
+
+}
+@font-face {
+    font-family: 'Menlo';
+    src: url('../fonts/menlo.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+*/
